@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType
  * GUIとして使うインベントリを作成する。自動でそのインベントリ内で起こるクリックイベントをキャンセルする。
  */
 abstract class GuiInventory: Listener {
+
     /**
      * インベントリ(GUI)を作成して返す
      * @param type インベントリのタイプ
@@ -94,7 +95,7 @@ abstract class GuiInventory: Listener {
         private val rangeLong = (Long.MIN_VALUE..Long.MAX_VALUE)
         //GuiItemのデータのKey用
         @Suppress("DEPRECATION")
-        private val key by lazy { NamespacedKey("SrainLib-${this.javaClass.`package`.name}", "GuiItemID") }
+        private val key : NamespacedKey = NamespacedKey("srainlib-${(UInt.MIN_VALUE..UInt.MAX_VALUE).random()}", "guiitemid")
         //GuiItemID別のクリック時Unit保存用
         private val cacheClick = mutableMapOf<Long, (InventoryClickEvent) -> Unit>()
 

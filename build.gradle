@@ -5,8 +5,8 @@ plugins {
 
 apply plugin: 'org.jetbrains.dokka'
 
-group = 'com.github.srain3.plugin'
-version = '0.0.0'
+group = 'com.github.srain3'
+version = '0.0.1'
 
 repositories {
     mavenCentral()
