@@ -88,7 +88,7 @@ object ToolBox {
         if (this.type == Material.BOW || this.type == Material.CROSSBOW) {
             meta.addEnchant(Enchantment.LURE, 0, true)
         } else {
-            meta.addEnchant(Enchantment.ARROW_INFINITE, 0, true)
+            meta.addEnchant(Enchantment.INFINITY, 0, true)
         }
         this.itemMeta = meta
         return this
