@@ -2,6 +2,7 @@ package com.github.srain3.plugin.lib
 
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.IOException
@@ -14,7 +15,7 @@ import java.util.logging.Level
  * @param fromJarReplace (Option)[saveDefault]の時[fromJar]がtrueの場合、データフォルダ内に同名ファイルが存在していても上書き保存するかどうか
  */
 open class CustomYaml (
-    private val plugin: JavaPlugin,
+    private val plugin: Plugin,
     private val fileName: String,
     isSaveBeforeLoading: Boolean = false,
     private val fromJar: Boolean = false,
