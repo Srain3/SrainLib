@@ -15,10 +15,10 @@ object Text {
     /**
      * [LocalDateTime]を文字列に変える時のフォーマットパターン
      */
-    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private val timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
     /**
      * 「2024-02-20 11:15:20」のような文字列に変換する
      */
-    fun LocalDateTime.toFormat(): String = this.format(formatter)
+    fun LocalDateTime.toFormat(): String = this.format(timeFormatter)
 }

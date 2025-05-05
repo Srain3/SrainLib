@@ -21,7 +21,7 @@ object Util {
     /**
      * 方角の文字列からYawを取得する
      */
-    fun getYawNEWS(str: String): Double {
+    fun newsStringToYaw(str: String): Double {
         return when (str.lowercase()) {
             "n" -> { -180.0 }
             "nne" -> { -157.5 }

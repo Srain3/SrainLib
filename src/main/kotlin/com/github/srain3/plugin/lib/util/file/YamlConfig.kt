@@ -9,29 +9,22 @@ import java.io.IOException
 import java.util.logging.Level
 
 /**
- * [javaPlugin]のデータフォルダ内に自由なファイル名で管理できる[org.bukkit.configuration.file.YamlConfiguration]の拡張版
- * @param isSaveBeforeLoading (Option)最初に[saveDefault]を行うかどうか、デフォ:false=ファイルセーブを行わずにロードする
- * @param fromJar (Option)[saveDefault]の時[javaPlugin]内resourcesフォルダから同名ファイルをペーストするかどうか
- * @param fromJarReplace (Option)[saveDefault]の時[fromJar]がtrueの場合、データフォルダ内に同名ファイルが存在していても上書き保存するかどうか
+ * データフォルダ内に自由なファイル名で管理できる
+ * @param fromJar リソースフォルダからのファイルを保存するか/上書きペーストするかどうか
  */
 class YamlConfig (
     private val fileName: String,
     private val javaPlugin: JavaPlugin = SrainLib.Companion.plugin,
-    isSaveBeforeLoading: Boolean = false,
-    private val fromJar: Boolean = false,
-    private val fromJarReplace: Boolean = false
+    private val fromJar: Pair<Boolean, Boolean> = Pair(true, false)
 ) : YamlConfiguration() {
     private val file = File(javaPlugin.dataFolder, fileName)
 
     init {
-        if (isSaveBeforeLoading) {
-            saveDefault()
-        }
         reload()
     }
 
     /**
-     * ファイルがない場合に[fromJar]がtrueの場合jarからファイルをペースト、[fromJar]がfalseの場合空ファイル生成、[fromJar]と[fromJarReplace]が両方trueの場合上書きペーストする。
+     * ファイルがない場合に[fromJar]がtrueの場合jarからファイルをペースト、[fromJar]が両方trueの場合上書きペーストする。
      */
     fun saveDefault() {
         val dataFolder = javaPlugin.dataFolder
@@ -39,12 +32,12 @@ class YamlConfig (
             dataFolder.mkdir()
         }
         if (!file.exists()) {
-            if (fromJar) {
+            if (fromJar.first) {
                 javaPlugin.saveResource(fileName, false)
             } else {
                 save()
             }
-        } else if (fromJarReplace && fromJar) {
+        } else if (fromJar.first && fromJar.second) {
             javaPlugin.saveResource(fileName, true)
         }
     }
