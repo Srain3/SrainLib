@@ -1,6 +1,7 @@
 package com.github.srain3.plugin.lib
 
 import com.github.srain3.plugin.lib.GuiInventory.GuiItem.guiClickEvent
+import com.github.srain3.plugin.lib.SrainLib.Companion.plugin
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
@@ -94,8 +95,8 @@ object GuiInventory: Listener {
 
     object GuiItem {
         //GuiItemのデータのKey用
-        private val clickKey : NamespacedKey = NamespacedKey(ToolBox.plugin, "GuiItemClick")
-        private val dragKey : NamespacedKey = NamespacedKey(ToolBox.plugin, "GuiItemDrag")
+        private val clickKey : NamespacedKey = NamespacedKey(plugin, "GuiItemClick")
+        private val dragKey : NamespacedKey = NamespacedKey(plugin, "GuiItemDrag")
         //GuiItemID別のUnit保存用
         private val cacheClick = mutableMapOf<Long, Pair<Boolean, (InventoryClickEvent) -> Unit>>()
         private val cacheDrag = mutableMapOf<Long, Pair<Boolean, (InventoryDragEvent) -> Unit>>()

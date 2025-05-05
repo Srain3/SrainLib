@@ -1,16 +1,15 @@
-package com.github.srain3.plugin.lib
+package com.github.srain3.plugin.lib.util.file
 
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.IOException
 import java.util.logging.Level
 
 /**
- * [File]から管理できる[YamlConfiguration]の拡張版
+ * [java.io.File]から管理できる[org.bukkit.configuration.file.YamlConfiguration]の拡張版
  */
-open class CustomYamlFile (
+class YamlConfigFile (
     private val file: File
 ) : YamlConfiguration() {
 

@@ -1,5 +1,6 @@
 package com.github.srain3.plugin.lib
 
+import com.github.srain3.plugin.lib.SrainLib.Companion.plugin
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -27,7 +28,7 @@ class Cmd(
     }
 
     fun setRegister() {
-        SimpleCommandMap(Bukkit.getServer()).register(ToolBox.plugin.name, this)
+        SimpleCommandMap(Bukkit.getServer()).register(plugin.name, this)
     }
 
     fun removeRegister() {
