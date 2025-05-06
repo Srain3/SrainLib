@@ -1,6 +1,7 @@
 package com.github.srain3.plugin.lib.util.gui
 
 import com.github.srain3.plugin.lib.util.Item.text
+import com.github.srain3.plugin.lib.util.gui.GuiInventory.clickSound
 import com.github.srain3.plugin.lib.util.gui.GuiItem.guiClickEvent
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -48,13 +49,7 @@ class GuiPagePanel(
     fun nextPageItem(material: Material = Material.WHITE_WOOL): ItemStack {
         return ItemStack(material).guiClickEvent {
             if (nextPage()) {
-                (it.whoClicked as Player).playSound(
-                    it.whoClicked,
-                    Sound.UI_BUTTON_CLICK,
-                    SoundCategory.MASTER,
-                    1f,
-                    1f
-                )
+                it.clickSound()
                 reflash(it.clickedInventory ?: return@guiClickEvent)
             }
         }.text("&aNext Page", listOf("&7次のページへ"))
@@ -63,13 +58,7 @@ class GuiPagePanel(
     fun backPageItem(material: Material = Material.WHITE_WOOL): ItemStack {
         return ItemStack(material).guiClickEvent {
             if (backPage()) {
-                (it.whoClicked as Player).playSound(
-                    it.whoClicked,
-                    Sound.UI_BUTTON_CLICK,
-                    SoundCategory.MASTER,
-                    1f,
-                    1f
-                )
+                it.clickSound()
                 reflash(it.clickedInventory ?: return@guiClickEvent)
             }
         }.text("&aBack Page", listOf("&7前のページへ"))

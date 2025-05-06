@@ -1,10 +1,17 @@
 package com.github.srain3.plugin.lib.util.gui
 
 import org.bukkit.Bukkit
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.inventory.*
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
 
 object GuiInventory: Listener {
     private val invList = mutableMapOf<Inventory, Pair<Boolean, Boolean>>()
@@ -36,19 +43,19 @@ object GuiInventory: Listener {
     }
 
     @EventHandler
-    fun interactEvent(e: InventoryInteractEvent) {
+    fun clickEvent(e: InventoryClickEvent) {
         // invListに存在しないインベントリのイベントの場合return
         if (!invList.contains(e.view.topInventory)) return
-        when(e) {
-            is InventoryClickEvent -> {
-                GuiItem.itemToRun(e)
-                if (invList[e.view.topInventory]?.second == true &&
-                    e.clickedInventory?.type == InventoryType.PLAYER) e.isCancelled = true
-            }
-            is InventoryDragEvent -> {
-                e.isCancelled = true
-            }
-        }
+        GuiItem.itemToRun(e)
+        if (invList[e.view.topInventory]?.second == true &&
+            e.clickedInventory?.type == InventoryType.PLAYER) e.isCancelled = true
+    }
+
+    @EventHandler
+    fun dragEvent(e: InventoryDragEvent) {
+        // invListに存在しないインベントリのイベントの場合return
+        if (!invList.contains(e.view.topInventory)) return
+        e.isCancelled = true
     }
 
     /**
@@ -72,5 +79,19 @@ object GuiInventory: Listener {
                 player.closeInventory()
             }
         }
+    }
+
+    fun InventoryClickEvent.clickSound(sound: Sound = Sound.UI_BUTTON_CLICK, category: SoundCategory = SoundCategory.MASTER, volume: Float = 1f, pitch: Float = 1f) {
+        (this.whoClicked as Player).playSound(this.whoClicked, sound, category, volume, pitch)
+    }
+
+    /**
+     * インベントリのxy座標にアイテムをセットする
+     * @param posX x座標(0~8)
+     * @param posY y座標(0~5)
+     * @param item アイテム
+     */
+    fun Inventory.setItem(posX: Int, posY: Int, item: ItemStack?) {
+        this.setItem(posY * 9 + posX, item)
     }
 }
