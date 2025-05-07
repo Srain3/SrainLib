@@ -1,5 +1,0 @@
-$dokka.format:javadoc-v1
-$dokka.linkExtension:html
-$dokka.location:com.github.srain3.plugin.lib/GuiInventory.GuiItem///PointingToDeclaration/com/github/srain3/plugin/lib/GuiInventory.GuiItem.html
-com.github.srain3.plugin.lib
-
