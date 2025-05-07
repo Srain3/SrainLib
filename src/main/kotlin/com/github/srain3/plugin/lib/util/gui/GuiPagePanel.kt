@@ -4,9 +4,6 @@ import com.github.srain3.plugin.lib.util.Item.text
 import com.github.srain3.plugin.lib.util.gui.GuiInventory.clickSound
 import com.github.srain3.plugin.lib.util.gui.GuiItem.guiClickEvent
 import org.bukkit.Material
-import org.bukkit.Sound
-import org.bukkit.SoundCategory
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack

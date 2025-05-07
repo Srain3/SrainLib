@@ -8,11 +8,10 @@ import org.bukkit.command.SimpleCommandMap
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import java.lang.reflect.Field
-import java.util.*
 
 /**
  * 始まりのコマンド
- * @param run0 「実行者,コマンド,入力コマンド名,引数リスト」->「実行内容」
+ * @param runCommand 「実行者,コマンド,入力コマンド名,引数リスト」->「実行内容」
  */
 class Cmd(
     name: String,
@@ -20,14 +19,19 @@ class Cmd(
     usageMessage: String = "/$name",
     aliases: List<String> = listOf(),
     permissionDefault: PermissionDefault = PermissionDefault.TRUE,
-    val permission0: Permission = Permission("${plugin.name}.$name.use", "\"/$name\" command permission.", permissionDefault),
-    private val run0: (CommandSender, Cmd, String, Array<out String>) -> Boolean = { _, _, _, _ -> false }
+    val permission0: Permission = Permission(
+        "${plugin.name}.$name.use",
+        "\"/$name\" command permission.",
+        permissionDefault),
+    private val runCommand: (CommandSender, Cmd, String, Array<out String>) -> Boolean
 ): Command(
     name,
     description,
     usageMessage,
     aliases
-) {
+), Args {
+    override val subCmds: MutableMap<String?, SubCmd> = mutableMapOf()
+
     init {
         plugin.server.pluginManager.addPermission(permission0)
         this.permission = permission0.name
@@ -54,16 +58,13 @@ class Cmd(
         return this
     }
 
-    // サブコマンド(引数)
-    private val subCmds = mutableMapOf<String?, SubCmd>()
-
     // コマンドが一番最初に実行される箇所
-    // 引数がない場合は[run0]を実行
+    // 引数がない場合は[runCommand]を実行
     override fun execute(
         sender: CommandSender, label: String, args: Array<out String>
     ): Boolean {
         if (!testPermission(sender)) return false
-        if (args.isEmpty()) return run0(sender, this, label, args)
+        if (args.isEmpty()) return runCommand(sender, this, label, args)
         if (subCmds[args[0]] != null) {
             return subCmds[args[0]]?.run(sender, this, label, args) ?: false
         }
@@ -88,58 +89,5 @@ class Cmd(
             }
         }
         return emptyList()
-    }
-
-    /**
-     * 引数のコマンド追加、nullは引数自由なコマンドになる
-     */
-    fun addArg(
-        arg: String?,
-        run: (CommandSender, Cmd, String, Array<out String>) -> Boolean = { _, _, _, _ -> false }
-    ): SubCmd {
-        val subCmd = SubCmd(arg, 0, run)
-        subCmds[arg] = subCmd
-        return subCmd
-    }
-
-    /**
-     * 引数のコマンドを一括追加
-     */
-    fun addArg(
-        arg: List<String>,
-        run: (CommandSender, Cmd, String, Array<out String>) -> Boolean = { _, _, _, _ -> false }
-    ): List<SubCmd> {
-        val list = mutableListOf<SubCmd>()
-        for (a in arg) {
-            val subCmd = SubCmd(a, 0, run)
-            subCmds[a] = subCmd
-            list.add(subCmd)
-        }
-        return list
-    }
-
-    /**
-     * このコマンドの一個後ろの引数リスト(String)を取得
-     * @param filter マッチング文字列
-     */
-    fun getNextArg(filter: String? = null): SortedSet<String?> {
-        val regex = (filter ?: "").toRegex(RegexOption.LITERAL)
-        return subCmds.keys.filterNot { it == null }.filter { regex.containsMatchIn(it ?: " ") }.toSortedSet(compareBy { it ?: "" })
-    }
-
-    /**
-     * このコマンドの一個後ろの引数リスト(SubCmd)を取得
-     * @param arg マッチング文字列
-     */
-    fun getArg(arg: String? = null): List<SubCmd> {
-        if (arg == null) return subCmds.values.toList()
-        return subCmds.filter { it.key == arg }.values.toList()
-    }
-
-    /**
-     * 引数のコマンドを削除
-     */
-    fun delete(arg: String?): SubCmd? {
-        return subCmds.remove(arg)
     }
 }

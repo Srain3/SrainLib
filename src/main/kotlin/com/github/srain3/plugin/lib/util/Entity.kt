@@ -26,11 +26,11 @@ object Entity {
      * listにあるEntityに対してのみレイトレースを試みてhitしたらtrueを返す。Distanceが0.0以下だとnullを返す。
      */
     fun rayTraceEntities(
+        searchEntityList: List<Entity>,
         start: Location,
         direction: Vector,
         maxDistance: Double,
-        raySize: Double,
-        searchEntityList: List<Entity>
+        raySize: Double
     ): Boolean? {
         if (maxDistance < 0.0) {
             return null

@@ -81,7 +81,12 @@ object GuiInventory: Listener {
         }
     }
 
-    fun InventoryClickEvent.clickSound(sound: Sound = Sound.UI_BUTTON_CLICK, category: SoundCategory = SoundCategory.MASTER, volume: Float = 1f, pitch: Float = 1f) {
+    fun InventoryClickEvent.clickSound(
+        sound: Sound = Sound.UI_BUTTON_CLICK,
+        category: SoundCategory = SoundCategory.MASTER,
+        volume: Float = 1f,
+        pitch: Float = 1f
+    ) {
         (this.whoClicked as Player).playSound(this.whoClicked, sound, category, volume, pitch)
     }
 

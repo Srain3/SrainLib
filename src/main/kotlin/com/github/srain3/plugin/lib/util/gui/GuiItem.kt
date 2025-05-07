@@ -35,7 +35,8 @@ object GuiItem {
      */
     fun itemToRun(e: InventoryClickEvent) {
         val clickItem = e.currentItem ?: return
-        val idLong = clickItem.itemMeta?.persistentDataContainer?.get(clickKey, PersistentDataType.LONG) ?: return
+        val idLong = clickItem.itemMeta
+            ?.persistentDataContainer?.get(clickKey, PersistentDataType.LONG) ?: return
         cacheClick[idLong]?.run {
             if (this.first) e.isCancelled = true
             this.second(e)
