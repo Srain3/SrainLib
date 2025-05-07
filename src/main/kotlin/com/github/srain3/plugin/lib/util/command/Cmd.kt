@@ -1,16 +1,18 @@
 package com.github.srain3.plugin.lib.util.command
 
-import com.github.srain3.plugin.lib.SrainLib.Companion.commandMap
-import com.github.srain3.plugin.lib.SrainLib.Companion.plugin
+import com.github.srain3.plugin.lib.SrainLib.commandMap
+import com.github.srain3.plugin.lib.SrainLib.getPlugin
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.SimpleCommandMap
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
+import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.Field
 
 /**
  * 始まりのコマンド
+ * permissionは「plugin名.command.コマンド名.use」で登録される
  * @param runCommand 「実行者,コマンド,入力コマンド名,引数リスト」->「実行内容」
  */
 class Cmd(
@@ -19,10 +21,6 @@ class Cmd(
     usageMessage: String = "/$name",
     aliases: List<String> = listOf(),
     permissionDefault: PermissionDefault = PermissionDefault.TRUE,
-    val permission0: Permission = Permission(
-        "${plugin.name}.$name.use",
-        "\"/$name\" command permission.",
-        permissionDefault),
     private val runCommand: (CommandSender, Cmd, String, Array<out String>) -> Boolean
 ): Command(
     name,
@@ -31,6 +29,11 @@ class Cmd(
     aliases
 ), Args {
     override val subCmds: MutableMap<String?, SubCmd> = mutableMapOf()
+    private val plugin: JavaPlugin = getPlugin()
+    val permission0: Permission = Permission(
+        "${plugin.name}.command.$name.use",
+        "\"/$name\" command permission.",
+        permissionDefault)
 
     init {
         plugin.server.pluginManager.addPermission(permission0)

@@ -8,7 +8,7 @@ object File {
     /**
      * プラグイン用フォルダからnameのディレクトリ内にあるファイルを返す
      */
-    fun getFilesFromFolder(name: String, pl: JavaPlugin = SrainLib.Companion.plugin): List<File>? {
+    fun getFilesFromFolder(name: String, pl: JavaPlugin = SrainLib.getPlugin()): List<File>? {
         val file = File(pl.dataFolder, name)
         return if (file.isDirectory) {
             file.listFiles()?.filter { it.isFile }
@@ -31,7 +31,7 @@ object File {
     /**
      * プラグイン用フォルダからnameのディレクトリ内にあるディレクトリを返す
      */
-    fun getFoldersFromFolder(name: String, pl: JavaPlugin = SrainLib.Companion.plugin): List<File>? {
+    fun getFoldersFromFolder(name: String, pl: JavaPlugin = SrainLib.getPlugin()): List<File>? {
         val file = File(pl.dataFolder, name)
         return if (file.isDirectory) {
             file.listFiles()?.filter { it.isDirectory }

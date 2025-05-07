@@ -1,6 +1,6 @@
 package com.github.srain3.plugin.lib.util.gui
 
-import com.github.srain3.plugin.lib.SrainLib.Companion.plugin
+import com.github.srain3.plugin.lib.SrainLib
 import org.bukkit.NamespacedKey
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
@@ -9,7 +9,9 @@ import kotlin.random.Random
 
 object GuiItem {
     //GuiItemのデータのKey用
-    private val clickKey : NamespacedKey = NamespacedKey(plugin, "GuiItemClick")
+    private val clickKey : NamespacedKey by lazy {
+        NamespacedKey(SrainLib.getPlugin(), "gui_click")
+    }
     //GuiItemID別のUnit保存用
     private val cacheClick = mutableMapOf<Long, Pair<Boolean, (InventoryClickEvent) -> Unit>>()
 

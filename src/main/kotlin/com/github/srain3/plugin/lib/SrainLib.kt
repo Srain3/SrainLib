@@ -7,31 +7,43 @@ import org.bukkit.command.SimpleCommandMap
 import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.Field
 
-class SrainLib: JavaPlugin() {
-    companion object {
-        val plugin by lazy { getPlugin(SrainLib::class.java) }
-        val commandMap by lazy {
-            try {
-                val bukkitCommandMap: Field = Bukkit.getServer().javaClass.getDeclaredField("commandMap")
+/**
+ * SrainLibのメインクラス
+ * 使用するPluginはこのクラスのonEnable()とonDisable()をしっかり実行してください。
+ */
+object SrainLib {
+    private var plugin: JavaPlugin? = null
+    val commandMap by lazy {
+        try {
+            val bukkitCommandMap: Field = Bukkit.getServer().javaClass.getDeclaredField("commandMap")
 
-                bukkitCommandMap.setAccessible(true)
-                val commandMap = bukkitCommandMap.get(Bukkit.getServer()) as SimpleCommandMap
+            bukkitCommandMap.setAccessible(true)
+            val commandMap = bukkitCommandMap.get(Bukkit.getServer()) as SimpleCommandMap
 
-                return@lazy commandMap
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return@lazy null
+            return@lazy commandMap
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        return@lazy null
     }
 
-    override fun onEnable() {
-        server.pluginManager.registerEvents(GuiInventory, this)
-
-        TestObj.testRun()
+    fun getPlugin(): JavaPlugin {
+        return plugin ?: throw NullPointerException("Plugin is not set. Please call onEnable() before using this.")
     }
 
-    override fun onDisable() {
+    /**
+     * ライブラリの起動
+     * @param plugin 使用プラグイン
+     */
+    fun onEnable(plugin: JavaPlugin) {
+        this.plugin = plugin
+        plugin.server.pluginManager.registerEvents(GuiInventory, plugin)
+    }
+
+    /**
+     * ライブラリの終了
+     */
+    fun onDisable() {
         CmdManager.unregisterAll()
         GuiInventory.disableTask()
     }

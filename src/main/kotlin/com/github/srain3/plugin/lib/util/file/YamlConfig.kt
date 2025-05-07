@@ -14,7 +14,7 @@ import java.util.logging.Level
  */
 class YamlConfig (
     private val fileName: String,
-    private val javaPlugin: JavaPlugin = SrainLib.Companion.plugin,
+    private val javaPlugin: JavaPlugin = SrainLib.getPlugin(),
     private val fromJar: Pair<Boolean, Boolean> = Pair(true, false)
 ) : YamlConfiguration() {
     private val file = File(javaPlugin.dataFolder, fileName)
