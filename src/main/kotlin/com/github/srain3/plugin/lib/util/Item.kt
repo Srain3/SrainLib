@@ -10,7 +10,7 @@ object Item {
     /**
      * ItemStackに表示名と説明を追加する(自動カラー化付き)
      */
-    fun ItemStack.text(title: String?, lore: List<String>?): ItemStack {
+    fun ItemStack.text(title: String?, lore: List<String>? = null): ItemStack {
         val meta = this.itemMeta ?: return this
         meta.setDisplayName(title?.color())
         meta.lore = lore?.color()

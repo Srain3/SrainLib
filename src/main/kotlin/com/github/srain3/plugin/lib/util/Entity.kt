@@ -3,6 +3,7 @@ package com.github.srain3.plugin.lib.util
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.util.BoundingBox
+import org.bukkit.util.RayTraceResult
 import org.bukkit.util.Vector
 
 object Entity {
@@ -23,7 +24,7 @@ object Entity {
     }
 
     /**
-     * listにあるEntityに対してのみレイトレースを試みてhitしたらtrueを返す。Distanceが0.0以下だとnullを返す。
+     * listにあるEntityに対してのみレイトレースを試みてhitしたらResultを返す。Distanceが0.0以下だとnullを返す。
      */
     fun rayTraceEntities(
         searchEntityList: List<Entity>,
@@ -31,25 +32,26 @@ object Entity {
         direction: Vector,
         maxDistance: Double,
         raySize: Double
-    ): Boolean? {
+    ): RayTraceResult? {
         if (maxDistance < 0.0) {
             return null
         } else {
             val startPos = start.toVector()
-            val var17: Iterator<*> = searchEntityList.iterator()
-            var hit = false
+            val var17: Iterator<*> = searchEntityList
+                .filter { it.world.uid == (start.world?.uid ?: return@filter true) }
+                .sortedBy { it.location.toVector().distance(startPos) }
+                .iterator()
 
             while (var17.hasNext()) {
                 val entity = var17.next() as Entity
                 val boundingBox = entity.boundingBox.expand(raySize)
                 val hitResult = boundingBox.rayTrace(startPos, direction, maxDistance)
                 if (hitResult != null) {
-                    hit = true
-                    break
+                    return RayTraceResult(hitResult.hitPosition, entity)
                 }
             }
 
-            return hit
+            return null
         }
     }
 }

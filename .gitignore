@@ -2,3 +2,4 @@
 .gradle/
 .kotlin/
 build/
+総行数取得.bat
