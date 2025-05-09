@@ -8,12 +8,12 @@ import org.bukkit.command.CommandSender
 object CmdManager {
     private val commands = mutableMapOf<String, Cmd>()
 
-    fun setRegister(cmd: Cmd) {
-        commands[cmd.name] = cmd
+    fun Cmd.setManager() {
+        commands[this.name] = this
     }
 
-    fun unRegister(cmd: Cmd) {
-        commands.remove(cmd.name)
+    fun Cmd.removeManager() {
+        commands.remove(this.name)
     }
 
     fun unRegisterByName(name: String): Cmd? {
@@ -35,6 +35,15 @@ object CmdManager {
             msg += " ${args[it]}"
         }
         msg += "§r§c§o← [error]"
+        sender.sendMessage(msg)
+    }
+
+    fun notPermissionMsg(sender: CommandSender, label: String, args: Array<out String>, errorIndex: Int) {
+        var msg = "§c§n/$label"
+        repeat(errorIndex) {
+            msg += " ${args[it]}"
+        }
+        msg += "§r§c§o← [not permission]"
         sender.sendMessage(msg)
     }
 }

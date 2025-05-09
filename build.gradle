@@ -8,11 +8,10 @@ plugins {
 apply plugin: 'org.jetbrains.dokka'
 
 group = 'com.github.srain3'
-version = '0.1.0-pre2'
+version = '0.1.0-pre3'
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
 }
 

@@ -1,6 +1,7 @@
 package com.github.srain3.plugin.lib.util.command
 
 import org.bukkit.command.CommandSender
+import org.bukkit.permissions.Permission
 import java.util.*
 
 interface Args {
@@ -11,6 +12,7 @@ interface Args {
      */
     fun addArg(
         arg: String?,
+        permission: Permission? = null,
         runCommand: (CommandSender, Cmd, String, Array<out String>) -> Boolean
     ): SubCmd {
         val i = if (this is SubCmd) {
@@ -18,7 +20,7 @@ interface Args {
         } else {
             0
         }
-        val subCmd = SubCmd(arg, i, runCommand)
+        val subCmd = SubCmd(arg, i, permission, runCommand)
         subCmds[arg] = subCmd
         return subCmd
     }
@@ -28,6 +30,7 @@ interface Args {
      */
     fun addArg(
         arg: List<String>,
+        permission: Permission? = null,
         runCommand: (CommandSender, Cmd, String, Array<out String>) -> Boolean
     ): List<SubCmd> {
         val i = if (this is SubCmd) {
@@ -37,7 +40,7 @@ interface Args {
         }
         val list = mutableListOf<SubCmd>()
         for (a in arg) {
-            val subCmd = SubCmd(a, i, runCommand)
+            val subCmd = SubCmd(a, i, permission, runCommand)
             subCmds[a] = subCmd
             list.add(subCmd)
         }
@@ -48,10 +51,20 @@ interface Args {
      * このコマンドの一個後ろの引数リスト(String)を取得
      * @param filter マッチング文字列
      */
-    fun getNextArg(filter: String? = null): SortedSet<String?> {
+    fun getNextArg(sender: CommandSender, filter: String? = null): SortedSet<String?> {
         val regex = (filter ?: "").toRegex(RegexOption.LITERAL)
-        return subCmds.keys
-            .filterNot { it == null }.filter { regex.containsMatchIn(it ?: " ") }
+        val keys = mutableListOf<String>()
+        subCmds.forEach { (key, subCmd) ->
+            if (key != null) {
+                if (subCmd.permission == null) {
+                    keys.add(key)
+                } else if (sender.hasPermission(subCmd.permission.name)) {
+                    keys.add(key)
+                }
+            }
+        }
+
+        return keys.filter { regex.containsMatchIn(it) }
             .toSortedSet(compareBy { it ?: "" })
     }
 

@@ -2,6 +2,8 @@ package com.github.srain3.plugin.lib.util.command
 
 import com.github.srain3.plugin.lib.SrainLib.commandMap
 import com.github.srain3.plugin.lib.SrainLib.getPlugin
+import com.github.srain3.plugin.lib.util.command.CmdManager.removeManager
+import com.github.srain3.plugin.lib.util.command.CmdManager.setManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.SimpleCommandMap
@@ -39,7 +41,7 @@ class Cmd(
         plugin.server.pluginManager.addPermission(permission0)
         this.permission = permission0.name
         commandMap?.register(plugin.name, this@Cmd)
-        CmdManager.setRegister(this)
+        this.setManager()
     }
 
     fun unRegister(): Cmd {
@@ -56,7 +58,7 @@ class Cmd(
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        CmdManager.unRegister(this)
+        this.removeManager()
         plugin.server.pluginManager.removePermission(permission0)
         return this
     }
@@ -82,13 +84,16 @@ class Cmd(
         sender: CommandSender, alias: String, args: Array<out String?>
     ): List<String?> {
         if (!testPermission(sender)) return emptyList()
-        if (args.size <= 1) return getNextArg(args[0]).toList()
+        if (args.size <= 1) return getNextArg(sender, args[0]).toList()
         var subCmd = subCmds[args[0]] ?: subCmds[null] ?: return emptyList()
         repeat(args.size - 1) {
+            if (subCmd.permission != null && !sender.hasPermission(subCmd.permission.name)) {
+                return emptyList()
+            }
             if (it < args.size - 2) {
                 subCmd = subCmd.subCmds[args[it + 1]] ?: return emptyList()
             } else {
-                return subCmd.getNextArg(args[it + 1]).toList()
+                return subCmd.getNextArg(sender, args[it + 1]).toList()
             }
         }
         return emptyList()
